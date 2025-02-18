@@ -47,20 +47,30 @@ The synthetic dataset is based on simple assumptions, such as proportional relat
 
 ## **Usage**
 
-### 1. Train the Model
-To train the neural network, run:
-```bash
-python src/train.py
-```
-This script processes the dataset, trains the model, and saves it to the `models/` directory.
+[//]: # (### 1. Train the Model)
 
-### 2. Evaluate the Model
-To evaluate the trained model on a test dataset, run:
-```bash
-python src/evaluate.py
-```
+[//]: # (To train the neural network, run:)
 
-### 3. Run the Dash Dashboard
+[//]: # (```bash)
+
+[//]: # (python src/train.py)
+
+[//]: # (```)
+
+[//]: # (This script processes the dataset, trains the model, and saves it to the `models/` directory.)
+
+[//]: # ()
+[//]: # (### 2. Evaluate the Model)
+
+[//]: # (To evaluate the trained model on a test dataset, run:)
+
+[//]: # (```bash)
+
+[//]: # (python src/evaluate.py)
+
+[//]: # (```)
+
+### Run the Dash Dashboard
 To use the interactive dashboard for predictions, run:
 ```bash
 python -m dashboard/app.py
