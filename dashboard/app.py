@@ -1,15 +1,15 @@
 import dash
 from dash import html, dcc, Input, Output
-import numpy as np
+import torch
 
+from models.nn_model import HealthScoreNN
 
-# Dummy model predictions (replace with your model)
 def predict_health_score(steps, calories, sleep):
-    # Pass inputs through the trained model instead
-    return 10 + steps * 0.01 + calories * 0.1 + sleep * 1.5
+    input_data = torch.tensor([[steps, calories, sleep]], dtype=torch.float32)
+    model = torch.load('models/health_score_model.pth', weights_only=False)
+    res = model(input_data)
+    return res.item()
 
-
-# Dash app setup
 app = dash.Dash()
 
 app.layout = html.Div([
@@ -20,7 +20,6 @@ app.layout = html.Div([
     html.Button('Predict', id='predict-button'),
     html.H2(id='prediction-output')
 ])
-
 
 @app.callback(
     Output('prediction-output', 'children'),
