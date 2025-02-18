@@ -36,27 +36,12 @@ The dataset consists of daily activity metrics:
   - `calories_burned`: Calories burned during the day.
   - `sleep_hours`: Total hours of sleep in a day.
 - **Target**:
-  - `health_score`: A numeric value measuring health on a scale (e.g., between 50 and 100).
+  - `health_score`: A numeric value measuring health on a scale (e.g., approximately between 15 and 100).
 
-You can use a real-world dataset from sources like Kaggle or generate a synthetic dataset included in the code.
+You can use a real-world dataset (e.g., from Kaggle) or generate synthetic data using the methods included in the code.
 
----
-
-## **Project Structure**
-```plaintext
-health-predictor/
-├── datasets/                # (Optional) Folder for datasets
-├── models/                  # Saved NN models
-├── dashboard/               # Dash application code
-├── src/                     # Source code for training and prediction
-│   ├── dataset.py           # Data loading and preprocessing
-│   ├── nn_model.py          # PyTorch neural network implementation
-│   ├── train.py             # Model training script
-│   ├── evaluate.py          # Evaluation script
-├── app.py                   # Main entry point for the Dash app
-├── README.md                # Project documentation
-├── requirements.txt         # Dependencies
-```
+### **Synthetic Dataset Note**
+The synthetic dataset is based on simple assumptions, such as proportional relationships between steps, calories, and sleep, with added random noise. While useful for demonstrating the project, synthetic data may not reflect the complexity of real-world data. For better performance, consider using a real dataset.
 
 ---
 
@@ -67,33 +52,42 @@ To train the neural network, run:
 ```bash
 python src/train.py
 ```
-This will preprocess the dataset, train the model, and save it to the `models/` directory.
+This script processes the dataset, trains the model, and saves it to the `models/` directory.
 
 ### 2. Evaluate the Model
-To evaluate the trained model on the test dataset, run:
+To evaluate the trained model on a test dataset, run:
 ```bash
 python src/evaluate.py
 ```
 
 ### 3. Run the Dash Dashboard
-To launch the interactive dashboard for predictions:
+To use the interactive dashboard for predictions, run:
 ```bash
-python app.py
+python -m dashboard/app.py
 ```
-Once running, go to `http://127.0.0.1:8050/` in your web browser to access the application.
+Once running, open your browser and navigate to:
+
+#### Input Ranges
+For accurate predictions, ensure your inputs match the following ranges based on the training dataset:
+- `steps`: 1,000 to 20,000
+- `calories_burned`: 1,200 to 4,500
+- `sleep_hours`: 4 to 12
+
+Predictions might be unreliable if the input values are significantly outside these ranges.
 
 ---
 
 ## **Dash Application**
-- The Dash application provides an easy-to-use interface for entering metrics such as steps, calories burned, and sleep hours.
-- The model predicts a corresponding health score and displays it in real time.
+- The Dash application is a simple web-based interface for entering input metrics like steps, calories burned, and sleep hours.
+- The model predicts a health score that is displayed in real time.
+- No input validation is performed directly in the dashboard, so use valid ranges as described above when entering metrics.
 
 ---
 
 ## **Model Details**
 - **Architecture**:
   - Input layer with 3 features (`steps`, `calories_burned`, `sleep_hours`).
-  - Two hidden layers with 64 and 32 neurons, ReLU activation.
+  - Three hidden layers with 64, 32, and 16 neurons (using ReLU activation).
   - Output layer with 1 neuron for the health score prediction.
 - **Loss Function**: Mean Squared Error (MSE).
 - **Optimizer**: Adam (Learning rate = 0.001).
@@ -101,20 +95,43 @@ Once running, go to `http://127.0.0.1:8050/` in your web browser to access the a
 
 ---
 
+## **Model Saving and Loading**
+- The trained model is saved to the `models/` directory in the `.pth` format.
+- A `scaler.pkl` file containing the scaler for data normalization is also saved in the same directory.
+- To reuse the trained model, you can load it as follows:
+  ```python
+  import torch
+  model = torch.load('models/health_score_model.pth')
+  model.eval()  # Set the model to evaluation mode
+  ```
+
+---
+
+## **Example Predictions**
+Below are sample inputs and the corresponding health scores predicted by the model:
+
+| Steps  | Calories Burned | Sleep Hours | Predicted Health Score |
+|--------|------------------|-------------|-------------------------|
+| 6,000  | 2,200            | 7           | 72.5                   |
+| 15,000 | 3,800            | 8.5         | 89.2                   |
+| 3,000  | 1,500            | 6           | 45.3                   |
+
+---
+
 ## **Future Enhancements**
-- Support for additional health metrics (e.g., heart rate, distance traveled).
-- Integrate real-world datasets for better predictions.
-- Add visualization components in the Dash dashboard (e.g., trend charts).
-- Experiment with advanced neural network architectures, e.g., deeper networks or recurrent models for time-series data.
+- Support for additional features like heart rate or distance traveled.
+- Integration of real-world datasets for more accurate predictions.
+- Visualization features in the dashboard, such as trend charts.
+- Advanced neural network architectures for time-series data.
 
 ---
 
 ## **License**
-This project is licensed under the MIT License. Feel free to use and modify it as needed.
+This project is licensed under the MIT License. Feel free to use, modify, and distribute as needed.
 
 ---
 
 ## **Acknowledgments**
-- [PyTorch](https://pytorch.org/) for the neural network framework.
-- [Dash](https://dash.plotly.com/) for the dashboarding capabilities.
-- Kaggle for health-related datasets that inspired the project.
+- [PyTorch](https://pytorch.org/) for enabling neural network implementation.
+- [Dash](https://dash.plotly.com/) for building the dashboard interface.
+- Kaggle datasets for inspiration and synthetic data ideas.
