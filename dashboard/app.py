@@ -1,11 +1,14 @@
 import dash
 from dash import html, dcc, Input, Output
 import torch
-
+import joblib
 from models.nn_model import HealthScoreNN
 
 def predict_health_score(steps, calories, sleep):
-    input_data = torch.tensor([[steps, calories, sleep]], dtype=torch.float32)
+    data = [[steps, calories, sleep]]
+    scaler = joblib.load('models/scaler.pkl')
+    scaled_data = scaler.transform(data)
+    input_data = torch.tensor(scaled_data, dtype=torch.float32)
     model = torch.load('models/health_score_model.pth', weights_only=False)
     res = model(input_data)
     return res.item()
@@ -31,7 +34,7 @@ def update_prediction(steps, calories, sleep):
     if None in [steps, calories, sleep]:
         return "Please enter all inputs"
     prediction = predict_health_score(steps, calories, sleep)
-    return f"Predicted Health Score: {prediction:.2f}"
+    return f"Predicted Health Score: {prediction:.1f}"
 
 
 if __name__ == '__main__':
