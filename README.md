@@ -24,7 +24,7 @@ To run this project, you'll need the following:
 
 Install all dependencies using:
 ```bash
-pip install torch pandas numpy scikit-learn dash matplotlib
+pip install torch pandas numpy scikit-learn dash matplotlib joblib
 ```
 
 ---
@@ -71,6 +71,11 @@ The synthetic dataset is based on simple assumptions, such as proportional relat
 [//]: # (```)
 
 ### Run the Dash Dashboard
+Before running the application, set up the environment by executing:
+```bash
+source setup.sh
+```
+
 To use the interactive dashboard for predictions, run:
 ```bash
 python -m dashboard/app.py
@@ -112,7 +117,7 @@ Predictions might be unreliable if the input values are significantly outside th
   ```python
   import torch
   model = torch.load('models/health_score_model.pth')
-  model.eval()  # Set the model to evaluation mode
+  model.eval()
   ```
 
 ---
